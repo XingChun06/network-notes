@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="用通俗步骤解释从输入网址到页面出现时发生的网络请求过程。">
+    <title>一次网页请求经历了什么｜网络札记</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/main.js" defer></script>
+  </head>
+  <body class="article-page">
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <header class="site-header solid" data-header>
+      <a class="brand" href="../index.html" aria-label="返回网络札记首页">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span>网络札记</span>
+      </a>
+      <button class="menu-button" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="site-nav" data-menu-button>☰</button>
+      <nav class="site-nav" id="site-nav" aria-label="主导航" data-nav>
+        <a href="../index.html#journey">学习路径</a>
+        <a href="../index.html#article">最新文章</a>
+        <a href="../index.html#protocols">协议速览</a>
+        <a href="../index.html#resources">参考资源</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <article class="article-shell">
+        <header class="article-header">
+          <a class="back-link" href="../index.html">← 返回首页</a>
+          <p class="eyebrow">网络基础 · 学习记录</p>
+          <h1>一次网页请求经历了什么</h1>
+          <p class="article-deck">从在地址栏按下回车，到页面完整出现，浏览器需要连续完成名称解析、连接建立、资源请求和渲染。</p>
+          <div class="byline">
+            <time datetime="2026-10-08">2026 年 10 月 8 日</time>
+            <span>约 6 分钟阅读</span>
+          </div>
+        </header>
+
+        <figure class="article-figure">
+          <img src="../assets/circuit-board.jpg" alt="近距离拍摄的计算机电路板与电子元件">
+          <figcaption>网页最终显示在屏幕上，但它的旅程始于网络中的一次请求。</figcaption>
+        </figure>
+
+        <div class="article-body">
+          <p class="lead">网页看起来像一份已经排好的电子文档，实际却是浏览器在很短时间内取回多种资源，再按规则组合出的结果。理解这条路径，有助于把 HTML、服务器和 HTTP 放进同一幅图里。</p>
+
+          <h2>第一步：把域名变成地址</h2>
+          <p>浏览器首先需要知道服务器位于哪里。DNS 会把容易记忆的域名转换成 IP 地址。浏览器会优先检查已有缓存；没有命中时，系统再向 DNS 解析器查询。这个过程类似在通讯录中根据姓名查找号码。</p>
+
+          <h2>第二步：建立安全连接</h2>
+          <p>获得地址后，浏览器与服务器建立连接。传统的 HTTP/1.1 和 HTTP/2 通常基于 TCP；HTTPS 还要完成 TLS 握手，用于协商加密方式并验证服务器证书。HTTP/3 则把传输建立在 QUIC 之上。</p>
+
+          <h2>第三步：发送 HTTP 请求</h2>
+          <p>连接就绪后，浏览器发送请求。请求中包含方法、路径和请求头，例如：</p>
+          <pre><code>GET /posts/a-web-request.html HTTP/1.1
+Host: example.github.io
+Accept: text/html</code></pre>
+          <p><code>GET</code> 表示读取资源，路径指出需要的页面，<code>Host</code> 用来标识目标网站。服务器处理请求后返回状态码、响应头和 HTML 正文。</p>
+
+          <h2>第四步：继续获取页面资源</h2>
+          <p>浏览器解析 HTML 时，会发现样式表、脚本和图片地址，于是继续发起请求。现代协议可以在同一连接中并发传输多个资源，减少反复等待。开发者工具的 Network 面板会把这些请求逐条列出。</p>
+
+          <h2>第五步：解析并绘制页面</h2>
+          <p>浏览器把 HTML 转换成文档结构，把 CSS 转换成样式规则，再计算每个元素的位置和尺寸。最后，它把文字、颜色和图片绘制到屏幕上。JavaScript 还可以在页面出现后继续改变内容和交互状态。</p>
+
+          <h2>在本次实验中观察协议</h2>
+          <ol>
+            <li>打开部署后的公网网页，而不是本地预览地址。</li>
+            <li>按 F12 打开开发者工具，选择 Network 面板。</li>
+            <li>刷新页面，在表头启用 Protocol 列。</li>
+            <li>找到类型为 document 的主页面请求，记录协议值。</li>
+          </ol>
+          <p><code>http/1.1</code>、<code>h2</code> 和 <code>h3</code> 分别对应 HTTP/1.1、HTTP/2 和 HTTP/3。最终结果取决于部署平台、浏览器和网络环境，应以实际观测为准。</p>
+
+          <h2>进一步阅读</h2>
+          <p>可以继续参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Overview" target="_blank" rel="noopener">MDN 的 HTTP 概述</a>、<a href="https://developer.chrome.com/docs/devtools/network/" target="_blank" rel="noopener">Chrome Network 面板文档</a>和 <a href="https://docs.github.com/zh/pages" target="_blank" rel="noopener">GitHub Pages 文档</a>。</p>
+        </div>
+
+        <footer class="article-footer">
+          <p>这篇文章是网络札记的第一篇学习记录。</p>
+          <a class="primary-link dark" href="../index.html#resources">查看参考资源 <span aria-hidden="true">→</span></a>
+        </footer>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>网络札记</strong>
+        <p>计算机网络实验一静态网页作品</p>
+      </div>
+      <div class="footer-meta">
+        <p>文章配图：<a href="https://unsplash.com/photos/m_HRfLhgABo" target="_blank" rel="noopener">Umberto / Unsplash</a></p>
+        <p>© <span data-year>2026</span> 网络札记</p>
+      </div>
+    </footer>
+  </body>
+</html>
